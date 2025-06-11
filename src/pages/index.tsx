@@ -31,7 +31,7 @@ export default function Home() {
       </Head>
 
       <div className="text-center animate-fade-in space-y-6 max-w-2xl">
-        <img src="/logo.png" alt="Caelum Logo" className="w-20 h-20 mx-auto mb-0" style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }} />
+        <img src="/logo.png" alt="Caelum Logo" className="w-80 h-80 mx-auto mb-0" style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }} />
         <h1
           style={{
             color: '#6A4FBF',
