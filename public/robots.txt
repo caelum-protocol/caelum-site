@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.caelumprotocol.org
+Host: https://caelumprotocol.org
 
 # Sitemaps
-Sitemap: https://www.caelumprotocol.org/sitemap.xml
+Sitemap: https://caelumprotocol.org/sitemap.xml
