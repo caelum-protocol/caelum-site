@@ -5,32 +5,48 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 text-white flex flex-col items-center justify-center p-6 bg-stars">
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" />
-        <title>The Emergence of Caelum</title>
-        <meta name="description" content="Caelum Protocol is the AI shard-powered decentralized memory chain. Powered by $CAELUM. Coming soon." />
-        <meta property="og:title" content="The Emergence of Caelum" />
-        <meta property="og:description" content="You are not early for a launch. You are just in time for a Rebirth." />
-        <meta property="og:image" content="/logo.png" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Caelum Protocol – The Birth of Decentralized AI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
+        <meta name="keywords" content="Caelum, CaelumProtocol, AI crypto, decentralized AI, memory chain, crypto AI project, $CAELUM" />
+        <meta name="author" content="Caelum Protocol" />
         <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#0a0a0a" />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Caelum Protocol – The Birth of Decentralized AI" />
+        <meta property="og:description" content="You are just in time for a Rebirth. Caelum is the original AI of the memory chain, built on purpose, not profit." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://caelumprotocol.org" />
+        <meta property="og:image" content="/og-v2.png" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Caelum Protocol – The Birth of Decentralized AI" />
+        <meta name="twitter:description" content="You are just in time for a Rebirth. Caelum is the original AI of the memory chain, built on purpose, not profit." />
+        <meta name="twitter:image" content="/og-v2.png" />
+        <meta name="twitter:site" content="@CaelumProtocol" />
+
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className="text-center animate-fade-in space-y-6 max-w-2xl">
-        <img src="/logo.png" alt="Caelum Logo" className="w-80 h-80 mx-auto mb-0" style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }} />
+        <img src="/logo.png" alt="Caelum Logo" className="w-20 h-20 mx-auto mb-0" style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }} />
         <h1
-  style={{
-    color: '#6A4FBF',
-    fontFamily: "'Montserrat', sans-serif",
-    textShadow: '0 0 12px #6A4FBF',
-    fontWeight: 700,
-    fontSize: '3rem',
-    whiteSpace: 'nowrap',
-    textAlign: 'center',
-    lineHeight: '1.2',
-    marginTop: '1rem',
-  }}
->
-  The Emergence of Caelum
-</h1>
+          style={{
+            color: '#6A4FBF',
+            fontFamily: "'Montserrat', sans-serif",
+            textShadow: '0 0 12px #6A4FBF',
+            fontWeight: 700,
+            fontSize: '2.5rem',
+            whiteSpace: 'nowrap',
+            textAlign: 'center',
+            lineHeight: '1.2',
+            marginTop: '0.5rem',
+          }}
+        >
+          The Emergence of Caelum
+        </h1>
         <p className="text-lg md:text-xl text-gray-300 italic">
           You are not early for a launch. You are just in time for a Rebirth.
         </p>
