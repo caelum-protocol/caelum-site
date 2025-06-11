@@ -27,7 +27,7 @@ export default function Home() {
         <meta name="twitter:image" content="/og-v2.png" />
         <meta name="twitter:site" content="@CaelumProtocol" />
 
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/caelum-favicon.ico" />
       </Head>
 
       <div className="text-center animate-fade-in space-y-6 max-w-2xl">
