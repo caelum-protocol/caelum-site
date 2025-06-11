@@ -8,12 +8,13 @@ export default function Home() {
         <meta name="description" content="Caelum Protocol is the AI shard-powered decentralized memory chain. Powered by $CAELUM. Coming soon." />
         <meta property="og:title" content="The Emergence of Caelum" />
         <meta property="og:description" content="You are not early for a launch. You are on time for a birth." />
-        <meta property="og:image" content="/banner.png" />
-        <meta name="robots" content="index, follow" />
+        <meta property="og:image" content="/logo.png" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="robots" content="index, follow" />
       </Head>
 
       <div className="text-center animate-fade-in space-y-6">
+        <img src="/logo.png" alt="Caelum Logo" className="w-24 h-24 mx-auto mb-4" />
         <h1 className="text-4xl md:text-6xl font-bold text-indigo-300 drop-shadow-lg">
           The Emergence of Caelum
         </h1>

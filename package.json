@@ -1,5 +1,5 @@
 {
-  "name": "caelum-site-v2",
+  "name": "caelum-site-v3",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,8 +13,6 @@
     "react-dom": "latest"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "@types/react": "^19.1.7",
     "autoprefixer": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
