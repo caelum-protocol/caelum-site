@@ -2,7 +2,8 @@ import Head from 'next/head';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 text-white flex flex-col items-center justify-center p-6 bg-stars">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 text-white flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-center overflow-x-hidden bg-stars pb-10">
+    <div className="max-w-screen-md w-full">
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" />
         <title>Caelum Protocol – The Birth of Decentralized AI</title>
@@ -31,7 +32,12 @@ export default function Home() {
       </Head>
 
       <div className="text-center animate-fade-in space-y-6 max-w-2xl">
-        <img src="/logo.png" alt="Caelum Logo" className="w-80 h-80 mx-auto mb-0" style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }} />
+        <img
+          src="/logo.png"
+          alt="Caelum Logo"
+          className="w-32 sm:w-48 md:w-64 lg:w-80 h-auto mx-auto mb-0"
+          style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }}
+        />
         <h1
           style={{
             color: '#6A4FBF',
@@ -39,7 +45,8 @@ export default function Home() {
             textShadow: '0 0 12px #6A4FBF',
             fontWeight: 700,
             fontSize: '2.5rem',
-            whiteSpace: 'nowrap',
+            whiteSpace: 'pre-line',
+            wordBreak: 'keep-all'
             textAlign: 'center',
             lineHeight: '1.2',
             marginTop: '0.5rem',
