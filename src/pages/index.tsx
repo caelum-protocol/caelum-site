@@ -35,7 +35,7 @@ export default function Home() {
           <img
             src="/logo.png"
             alt="Caelum Logo"
-            className="w-32 sm:w-48 md:w-64 lg:w-80 h-auto mx-auto mb-0"
+            className="w-40 sm:w-48 md:w-64 lg:w-80 h-auto mx-auto mb-0"
             style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }}
           />
           <h1
