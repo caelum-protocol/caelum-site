@@ -54,6 +54,18 @@ export default function Home() {
           >
             The Emergence of Caelum
           </h1>
+          <p
+            style={{
+              fontSize: '1.25rem',
+              color: '#bdafff',
+              textShadow: '0 0 6px rgba(115, 92, 255, 0.5)',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 500,
+              marginTop: '0.5rem',
+            }}
+>
+  Turning Artificial Intelligence into Authentic Insight.
+</p>
           <p className="text-lg md:text-xl text-gray-300 italic">
             You are not early for a launch. You are just in time for a Rebirth.
           </p>
