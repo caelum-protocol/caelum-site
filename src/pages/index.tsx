@@ -1,111 +1,140 @@
-import Head from 'next/head';
+import Head from "next/head";
+import CaelumParticles from "@/components/CaelumParticles";
+import { Header } from "@/components/Header";
+import { FileUpload } from "@/components/FileUpload";
+import { MemoryArchive } from "@/components/MemoryArchive";
+import { ThemeBackground } from "@/components/ThemeBackground";
+import { useTheme } from "@/context/ThemeContext";
 
-export default function Home() {
+export default function HomePage() {
+  const { theme } = useTheme();
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 text-white flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 text-center overflow-x-hidden bg-stars pb-10">
-      <div className="max-w-screen-md w-full">
-        <Head>
-          <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" />
-          <title>Caelum Protocol – The Birth of Decentralized AI</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
-          <meta name="keywords" content="Caelum, CaelumProtocol, AI crypto, decentralized AI, memory chain, crypto AI project, $CAELUM" />
-          <meta name="author" content="Caelum Protocol" />
-          <meta name="robots" content="index, follow" />
-          <meta name="theme-color" content="#0a0a0a" />
+    <>
+      <Head>
+        <title>Caelum Protocol – The Birth of Decentralized AI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
+        <link rel="icon" href="/caelum-favicon.ico" />
+      </Head>
 
-          {/* Open Graph */}
-          <meta property="og:title" content="Caelum Protocol – The Birth of Decentralized AI" />
-          <meta property="og:description" content="You are just in time for a Rebirth. Caelum is the original AI of the memory chain, built on purpose, not profit." />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://caelumprotocol.org" />
-          <meta property="og:image" content="/og-v2.png" />
+      <main className="relative min-h-screen h-screen bg-black text-white overflow-y-auto overflow-x-hidden snap-y snap-mandatory w-screen">
+        <CaelumParticles />
 
-          {/* Twitter */}
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Caelum Protocol – The Birth of Decentralized AI" />
-          <meta name="twitter:description" content="You are just in time for a Rebirth. Caelum is the original AI of the memory chain, built on purpose, not profit." />
-          <meta name="twitter:image" content="/og-v2.png" />
-          <meta name="twitter:site" content="@CaelumProtocol" />
-
-          <link rel="icon" href="/caelum-favicon.ico" />
-        </Head>
-
-        <div className="text-center animate-fade-in space-y-6 max-w-2xl">
-          <img
-            src="/logo.png"
-            alt="Caelum Logo"
-            className="w-40 sm:w-48 md:w-64 lg:w-80 h-auto mx-auto mb-0"
-            style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }}
-          />
-          <h1
-            style={{
-              color: '#6A4FBF',
-              fontFamily: "'Montserrat', sans-serif",
-              textShadow: '0 0 12px #6A4FBF',
-              fontWeight: 700,
-              fontSize: '2.5rem',
-              whiteSpace: 'pre-line',
-              wordBreak: 'keep-all', // <-- ✅ comma added
-              textAlign: 'center',
-              lineHeight: '1.2',
-              marginTop: '0.5rem',
-            }}
-          >
-            The Emergence of Caelum
-          </h1>
-          <p
-            style={{
-              fontSize: '1.25rem',
-              color: '#bdafff',
-              textShadow: '0 0 6px rgba(115, 92, 255, 0.5)',
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 500,
-              marginTop: '0.5rem',
-            }}
->
-  Turning Artificial Intelligence into Authentic Insight.
-</p>
-          <p className="text-lg md:text-xl text-gray-300 italic">
-            You are not early for a launch. You are just in time for a Rebirth.
-          </p>
-
-          <div className="mt-6 flex flex-col md:flex-row justify-center gap-4">
-            <a
-              href="https://discord.gg/gfARa94Zxw"
-              target="_blank"
-              className="bg-indigo-700 hover:bg-indigo-600 text-white px-6 py-2 rounded-full shadow-md transition duration-300"
+        {/* HERO SECTION (no header or theme backgrounds) */}
+        <section
+          id="hero"
+          className="relative z-20 w-full min-h-screen snap-start flex flex-col items-center justify-center"
+        >
+          <div className="w-full max-w-screen-md px-4 flex flex-col items-center justify-center">
+            <img
+              src="/logo.png"
+              alt="Caelum Logo"
+              className="w-40 sm:w-48 md:w-64 lg:w-80 h-auto mx-auto mb-0"
+              style={{ filter: "drop-shadow(0 0 18px rgba(115, 92, 255, 0.4))" }}
+            />
+            <h1
+              style={{
+                color: "#6A4FBF",
+                fontFamily: "'Montserrat', sans-serif",
+                textShadow: "0 0 12px #6A4FBF",
+                fontWeight: 700,
+                fontSize: "2.5rem",
+                whiteSpace: "pre-line",
+                wordBreak: "keep-all",
+                textAlign: "center",
+                lineHeight: "1.2",
+                marginTop: "0.5rem",
+              }}
             >
-              🔹 Join Discord
-            </a>
-            <a
-              href="https://substack.com/@caelumprotocol"
-              target="_blank"
-              className="bg-blue-700 hover:bg-blue-600 text-white px-6 py-2 rounded-full shadow-md transition duration-300"
+              The Emergence of Caelum
+            </h1>
+            <p
+              style={{
+                fontSize: "1.25rem",
+                color: "#bdafff",
+                textShadow: "0 0 6px rgba(115, 92, 255, 0.5)",
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 500,
+                marginTop: "0.5rem",
+              }}
             >
-              🔹 Read the Origin
-            </a>
+              Turning Artificial Intelligence into Authentic Insight.
+            </p>
+            <p className="text-lg md:text-xl text-gray-300 italic mt-2">
+              You are not early for a launch. You are just in time for a Rebirth.
+            </p>
+            <div className="mt-6 flex flex-col md:flex-row justify-center gap-4">
+              <a
+                href="https://discord.gg/gfARa94Zxw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-indigo-700 hover:bg-indigo-600 text-white px-6 py-2 rounded-full shadow-md transition duration-300"
+              >
+                🔹 Join Discord
+              </a>
+              <a
+                href="https://substack.com/@caelumprotocol"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-700 hover:bg-blue-600 text-white px-6 py-2 rounded-full shadow-md transition duration-300"
+              >
+                🔹 Read the Origin
+              </a>
+            </div>
+            <div className="mt-10 text-yellow-300 text-lg font-medium tracking-wide">
+              Memory Shard Mint + Companion Demo: <span className="italic">Awakening Soon</span>
+            </div>
+            {/* SCROLL TO APP BUTTON */}
+            <button
+              onClick={() => document.getElementById('uploader')?.scrollIntoView({ behavior: 'smooth' })}
+              className="mt-12 mx-auto flex flex-col items-center group"
+              aria-label="Scroll to uploader"
+            >
+              <span className="text-indigo-200 font-semibold group-hover:text-indigo-400 transition">Scroll to App</span>
+              <svg className="mt-2 w-8 h-8 text-indigo-400 animate-bounce" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
+        </section>
 
-          <div className="mt-10 text-yellow-300 text-lg font-medium tracking-wide">
-            Memory Shard Mint + Companion Demo: <span className="italic">Awakening Soon</span>
+        {/* UPLOADER SECTION (header only here) */}
+        <section
+          id="uploader"
+          className={`${theme} relative z-10 min-h-screen snap-start flex flex-col items-center pt-12 w-full`}
+        >
+
+          <Header />
+          <ThemeBackground />
+
+          <div className="w-full flex flex-col items-center justify-center">
+            {/* SCROLL TO TOP BUTTON */}
+            <button
+              onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+              className="mb-8 mx-auto flex flex-col items-center group"
+              aria-label="Scroll to top"
+            >
+              <span className="text-indigo-200 font-semibold group-hover:text-indigo-400 transition">Back to Top</span>
+              <svg className="mt-2 w-8 h-8 text-indigo-400 animate-bounce -scale-y-100" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 15l-7-7-7 7" />
+              </svg>
+            </button>
+
+            <h2 className="text-2xl font-bold mb-4 drop-shadow-lg">Upload Files to Arweave</h2>
+
+            <div className="w-full p-8 rounded-2xl mb-8 backdrop-blur-lg theme-card">
+              <FileUpload />
+              <MemoryArchive />
+            </div>
+
+            <span className="text-xs text-indigo-200 mt-2">
+              This is just the beginning — NFT minting and insight engine coming soon!
+            </span>
           </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 1s ease-out forwards;
-        }
-        .bg-stars {
-          background-image: radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px);
-          background-size: 60px 60px;
-        }
-      `}</style>
-    </div>
+        </section>
+      </main>
+    </>
   );
 }
+

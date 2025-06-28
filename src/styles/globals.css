@@ -2,12 +2,183 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background-color: #000;
+body {
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  @apply transition-colors duration-300;
+  background-color: transparent;
+  overflow-x: hidden;
 }
 
+/* === THEME DEFINITIONS === */
+
+.dark {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+}
+
+/* Scratchpad style effect */
+.dark .theme-card {
+  background-color: #111111;
+  background-image: radial-gradient(#222 1px, transparent 1px);
+  background-size: 4px 4px;
+  @apply backdrop-blur-sm border border-gray-700 text-white shadow-md;
+}
+
+/* === MATRIX === */
+.matrix {
+  background-color: black;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  --accent-glow: #00ff00;
+  --drop-border: #00cc00;
+}
+
+.matrix .theme-card {
+  background-color: rgba(0, 0, 0, 0.85);
+  border: 1px solid #00ff00;
+  color: #00ff88;
+  animation: glowPulse 3s ease-in-out infinite;
+  @apply backdrop-blur-sm shadow-md;
+}
+
+.matrix header {
+  background-color: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid #00ff00;
+  color: #00ffcc;
+  box-shadow: 0 0 10px #00ff00;
+  z-index: 50;
+  @apply backdrop-blur-md;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.matrix .theme-card:hover {
+  box-shadow: 0 0 12px #272727;
+  border-color: #000000;
+}
+
+/* === IRIS === */
+.iris {
+  background-color: black;
+  color: #e0d5ff;
+  font-family: 'Geist', sans-serif;
+  --drop-border: #ebe4ff;
+}
+
+.iris .theme-card {
+  background-color: rgba(255, 255, 255, 0.164);
+  @apply backdrop-blur-md;
+}
+@keyframes irisPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.iris-core {
+  animation: irisPulse 6s ease-in-out infinite;
+}
+.iris-core:hover {
+  box-shadow: 0 0 40px rgba(245, 234, 255, 0.671);
+  transform: scale(1.12);
+  transition: all 0.3s ease;
+}
+/* === PEPE === */
+.pepe {
+  background-color: #000000;
+  color: #c42eff;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  --accent-glow: #ff53da;
+  --drop-border: #df6363;
+}
+
+.pepe .theme-card {
+  background-color: rgba(160, 82, 250, 0.171);
+  @apply backdrop-blur border-[#ff53da] text-[#faffc4] shadow-md;
+}
+
+.pepe .theme-card:hover {
+  box-shadow: 0 0 10px #bf55da, 0 0 25px #cb55da;
+  border-color: hsl(310, 100%, 65%);
+}
+
+.pepe header {
+  border-bottom: 2px solid #aa36a4;
+  box-shadow: 0 2px 6px #7a1d1d;
+}
+
+/* === COMPONENTS === */
+/* === THEME STRUCTURE === */
+.theme-card {
+  @apply rounded-xl border p-4 sm:p-6 shadow-lg transition-all duration-300;
+  border-color: var(--drop-border);
+}
+
+/* === LIGHT THEME === */
+.theme-light .theme-card {
+  background-color: #ffffff;
+  color: #222;
+  border-color: #e0e0e0;
+}
+
+/* === DARK THEME === */
+.dark .theme-card {
+  background-color: #111111;
+  background-image: radial-gradient(#222 1px, transparent 1px);
+  background-size: 4px 4px;
+  @apply backdrop-blur-sm border text-white shadow-md;
+
+  animation: rgbBorder 6s linear infinite;
+}
+
+/* === ANIMATIONS === */
+@keyframes rgbBorder {
+  0%   { border-color: #ff0055; }
+  25%  { border-color: #00eeff; }
+  50%  { border-color: #6aff00; }
+  75%  { border-color: #ffaa00; }
+  100% { border-color: #ff0055; }
+}
+
+
+/* === ANIMATIONS === */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px #00ff00, 0 0 8px #00ff00;
+  }
+  50% {
+    box-shadow: 0 0 2px #00cc00, 0 0 4px #00cc00;
+  }
+}
+
+/* === DROPZONE HOVER GLOW === */
+.matrix .dropzone-active {
+  border: 2px solid #00ff00;
+  animation: glowPulse 1.8s ease-in-out infinite;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #00ff88;
+}
+
+.iris .dropzone-active {
+  border: 2px solid #a78bfa;
+  box-shadow: 0 0 12px #a78bfa;
+}
+
+.pepe .dropzone-active {
+  border: 2px solid #ff53e8;
+  box-shadow: 0 0 12px #a11fc2;
+}
+
+.dark .dropzone-active {
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px #ffffff;
+}
 @layer base {
   html {
     font-family: 'Montserrat', sans-serif;
