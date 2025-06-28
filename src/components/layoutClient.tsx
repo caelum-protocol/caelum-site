@@ -3,8 +3,6 @@
 import { Web3Provider } from "@/providers/web3";
 import { Toaster } from "react-hot-toast";
 import { ThemeClientWrapper } from "@/components/ThemeClientWrapper";
-import { Header } from "@/components/Header";
-import { ThemeBackground } from "@/components/ThemeBackground";
 import { useEffect, useState } from "react";
 import useMounted from "../utils/useMounted";
 import { AnimatePresence } from "framer-motion";
@@ -43,7 +41,6 @@ export default function LayoutClient({ children }: LayoutClientProps) {
   return (
     <ThemeClientWrapper>
       <Web3Provider>
-        <ThemeBackground />
         <Toaster position="top-right" />
         <Toaster
           position="bottom-right"

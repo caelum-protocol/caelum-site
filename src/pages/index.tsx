@@ -5,9 +5,11 @@ import { FileUpload } from "@/components/FileUpload";
 import { MemoryArchive } from "@/components/MemoryArchive";
 import { ThemeBackground } from "@/components/ThemeBackground";
 import { useTheme } from "@/context/ThemeContext";
+import { useInView } from "react-intersection-observer";
 
 export default function HomePage() {
   const { theme } = useTheme();
+  const { ref: uploaderRef, inView: uploaderInView } = useInView({ threshold: 0.1 });
 
   return (
     <>
@@ -102,11 +104,12 @@ export default function HomePage() {
         {/* UPLOADER SECTION (header only here) */}
         <section
           id="uploader"
+          ref={uploaderRef}
           className={`${theme} relative z-10 min-h-screen snap-start flex flex-col items-center pt-12 w-full`}
         >
 
           <Header />
-          <ThemeBackground />
+          {uploaderInView && <ThemeBackground />}
 
           <div className="w-full flex flex-col items-center justify-center">
             {/* SCROLL TO TOP BUTTON */}

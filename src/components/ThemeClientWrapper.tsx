@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import { useTheme } from "@/context/ThemeContext";
 
-const validThemes = ["dark", "iris", "matrix", "pepe"];
+const themes = ["dark", "iris", "matrix", "pepe"];
 
 export const ThemeClientWrapper = ({ children }: { children: React.ReactNode }) => {
-   const { theme } = useTheme();
+   // Remove any previously applied theme classes from <body> so that the landing
+  // section always renders without a theme. The actual theme is applied inside
+  // the uploader section.
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    // Document check keeps body class manipulation client-side for SSR safety
-    let className = document.body.className;
-    validThemes.forEach(t => (className = className.replace(t, "")));
-    document.body.className = `${className} ${theme}`.trim();
-  }, [theme]);
+    if (typeof document !== "undefined") {
+      themes.forEach(t => document.body.classList.remove(t));
+    }
+  }, []);
+
 
   return <>{children}</>;
 };
