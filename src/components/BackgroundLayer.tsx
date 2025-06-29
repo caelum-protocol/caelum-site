@@ -1,29 +1,25 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ThemeName, backgroundImageByTheme } from "@/themeStyles";
 import { useTheme } from "@/context/ThemeContext";
-import { AnimatePresence } from "framer-motion";
 
-export const BackgroundLayer = () => {
+// Universal invisible background layer for scroll fix on ALL themes
+// Optionally: also show theme image (at z-[-2]) if one exists
+export default function BackgroundLayer() {
   const { theme } = useTheme();
   const bg = backgroundImageByTheme[theme as ThemeName];
 
   return (
-    <AnimatePresence mode="wait">
+    <>
+      {/* Always provide the invisible scroll-fix layer */}
+      <div className="fixed inset-0 w-screen h-screen z-[-1] pointer-events-none" />
+      {/* Optionally, show a background image even further behind */}
       {bg && (
-        <motion.div
-          key={bg}
-          className="fixed inset-0 z-[0] bg-cover bg-no-repeat bg-bottom"
+        <div
+          className="fixed inset-0 z-[-2] bg-cover bg-no-repeat bg-bottom pointer-events-none"
           style={{ backgroundImage: `url('${bg}')` }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
         />
       )}
-    </AnimatePresence>
+    </>
   );
-};
-
-export default BackgroundLayer;
+}

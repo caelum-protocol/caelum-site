@@ -105,7 +105,7 @@ export default function HomePage() {
         <section
           id="uploader"
           ref={uploaderRef}
-          className={`${theme} relative z-10 min-h-screen snap-start flex flex-col items-center pt-12 w-full`}
+          className={`${theme} relative z-10 min-h-screen snap-start flex flex-col items-center pt-0 w-full`}
         >
 
           <Header />
@@ -126,7 +126,7 @@ export default function HomePage() {
 
             <h2 className="text-2xl font-bold mb-4 drop-shadow-lg">Upload Files to Arweave</h2>
 
-            <div className="w-full p-8 rounded-2xl mb-8 backdrop-blur-lg theme-card">
+            <div className="w-full p-8 rounded-2xl mb-8 backdrop-blur-1g theme-card z-10">
               <FileUpload />
               <MemoryArchive />
             </div>
