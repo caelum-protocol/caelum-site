@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.8.0",
     "@irys/sdk": "^0.2.11",
     "@tanstack/react-query": "^5.81.5",
     "connectkit": "^1.9.1",
