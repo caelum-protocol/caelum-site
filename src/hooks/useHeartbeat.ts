@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 // Optional: Accept a callback to handle the heartbeat
 export function useHeartbeat(onHeartbeat?: (timestamp: number) => void) {
-  const workerRef = useRef<Worker>();
+  const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
     // Prevent running on SSR
