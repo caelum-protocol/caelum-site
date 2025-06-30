@@ -41,7 +41,7 @@ export default function UploaderPage() {
           ref={uploaderRef}
           className="w-full flex flex-col items-center justify-center py-12"
         >
-          <h1 className="text-3xl font-extrabold mb-4 drop-shadow-lg">
+          <h1 className="text-3xl font-extrabold mb-4 drop-shadow-lg z-10">
             Arweave Uploader
           </h1>
           <p className="text-lg text-gray-200 mb-4 max-w-2xl text-center">
