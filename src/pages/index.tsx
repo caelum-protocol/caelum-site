@@ -48,7 +48,7 @@ export default function HomePage() {
           
             <Link
               href="/uploader"
-              className="mt-8 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:from-green-600 hover:to-blue-600 transition text-lg"
+              className="mt-8 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:from-purple-600 hover:to-blue-600 transition text-lg"
             >
               🚀 Try the Standalone Arweave Uploader
             </Link>
