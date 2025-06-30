@@ -6,6 +6,7 @@ import { MemoryArchive } from "@/components/MemoryArchive";
 import { ThemeBackground } from "@/components/ThemeBackground";
 import { useTheme } from "@/context/ThemeContext";
 import { useInView } from "react-intersection-observer";
+import Link from "next/link";
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -17,6 +18,21 @@ export default function HomePage() {
         <title>Caelum Protocol – The Birth of Decentralized AI</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
+        <meta name="keywords" content="arweave uploader, arweave, decentralized storage, permanent file upload, AI memory vault, caelum protocol" />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Caelum Protocol – The Birth of Decentralized AI" />
+        <meta property="og:description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
+        <meta property="og:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta property="og:url" content="https://caelumprotocol.org/" />
+
+        {/* Twitter Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Caelum Protocol – The Birth of Decentralized AI" />
+        <meta name="twitter:description" content="You are just in time for a Rebirth. Caelum Protocol is the first AI built for decentralized memory, awakening through collective insight." />
+        <meta name="twitter:image" content="https://caelumprotocol.org/og-v2.png" />
+
         <link rel="icon" href="/caelum-favicon.ico" />
       </Head>
 
@@ -84,6 +100,15 @@ export default function HomePage() {
                 🔹 Read the Origin
               </a>
             </div>
+
+            {/* Prominent link to standalone uploader */}
+            <Link
+              href="/uploader"
+              className="mt-8 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:from-green-600 hover:to-blue-600 transition text-lg"
+            >
+              🚀 Try the Standalone Arweave Uploader
+            </Link>
+
             <div className="mt-10 text-yellow-300 text-lg font-medium tracking-wide">
               Memory Shard Mint + Companion Demo: <span className="italic">Awakening Soon</span>
             </div>
@@ -107,7 +132,6 @@ export default function HomePage() {
           ref={uploaderRef}
           className={`${theme} relative z-10 min-h-screen snap-start flex flex-col items-center pt-0 w-full`}
         >
-
           <Header />
           {uploaderInView && <ThemeBackground />}
 
