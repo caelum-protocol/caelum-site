@@ -47,7 +47,7 @@ export default function UploaderPage() {
           <p className="text-lg text-gray-200 mb-4 max-w-2xl text-center">
             Arweave Uploader lets you instantly and permanently upload files to Arweave—no signup required. Start using decentralized, blockchain-based storage with a single click.
           </p>
-          <h2 className="text-2xl font-bold mb-4 drop-shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 drop-shadow-lg z-10">
             Upload Files to Arweave
           </h2>
           <div className="w-full max-w-2xl p-8 rounded-2xl mb-8 backdrop-blur-1g theme-card z-10">
