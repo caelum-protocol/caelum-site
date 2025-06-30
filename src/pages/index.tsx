@@ -148,14 +148,14 @@ export default function HomePage() {
               </svg>
             </button>
 
-            <h2 className="text-2xl font-bold mb-4 drop-shadow-lg">Upload Files to Arweave</h2>
+            <h2 className="text-2xl font-bold mb-4 drop-shadow-lg z-10">Upload Files to Arweave</h2>
 
             <div className="w-full p-8 rounded-2xl mb-8 backdrop-blur-1g theme-card z-10">
               <FileUpload />
               <MemoryArchive />
             </div>
 
-            <span className="text-xs text-indigo-200 mt-2">
+            <span className="text-xs text-indigo-200 mt-2 z-10">
               This is just the beginning — NFT minting and insight engine coming soon!
             </span>
           </div>

@@ -51,7 +51,7 @@ export default function UploaderPage() {
             Arweave Uploader lets you instantly and permanently upload files to Arweave—no signup required. Start using decentralized, blockchain-based storage with a single click.
             </p>
 
-            <span className="text-xs text-indigo-200 mt-2">
+            <span className="text-xs text-indigo-200 mt-2 z-10">
               This is just the beginning — NFT minting and insight engine coming soon!
             </span>
           </div>

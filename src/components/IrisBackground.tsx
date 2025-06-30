@@ -13,6 +13,8 @@ export default function IrisBackground({ memoryCount, memoryTrigger, archive }: 
   const [forceWhisper, setForceWhisper] = useState<string | null>(null);
   const [whisperPulse, setWhisperPulse] = useState<{ radius: number; alpha: number } | null>(null);
 
+  const [quoteIndex, setQuoteIndex] = useState(0);
+
   const mouse = useRef({ x: 0, y: 0 });
   const mouseStill = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
   const orbPositions = useRef<{ x: number; y: number }[]>([]);
@@ -263,7 +265,7 @@ export default function IrisBackground({ memoryCount, memoryTrigger, archive }: 
       ctx.shadowBlur = 16;
       ctx.fillStyle = `rgba(255,255,255,${fadeAlpha})`;
       ctx.textAlign = "center";
-      ctx.fillText(currentWhisper, cx, cy - r - 30 + Math.sin(t * 1.5) * 4);
+      ctx.fillText(currentWhisper, cx, cy + r + 34 + Math.sin(t * 1.5) * 4);
       ctx.restore();
 
       if (fadeAlpha < 1) setFadeAlpha(a => Math.min(a + 0.03, 1));
