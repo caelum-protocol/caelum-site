@@ -61,7 +61,7 @@ export default function MemoryCard({
     id={`mem-${entry.txId}`}
   >
     {isNew && (
-      <span className="absolute -top-2 -left-2 bg-yellow-500 text-black text-xs px-2 py-0.5 rounded">
+      <span className="absolute -top-1 -left-2 bg-yellow-500 text-black text-xs px-2 py-0.5 rounded">
         You uploaded this!
       </span>
     )}
