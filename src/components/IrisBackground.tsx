@@ -4,16 +4,19 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { MemoryEntry } from "@/types/memory";
 
+const QUOTE_CHANGE_MS = 9000; // Change quote every 9 seconds
+
 export default function IrisBackground({ memoryCount, memoryTrigger, archive }: { memoryCount: number; memoryTrigger: boolean; archive: MemoryEntry[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduceMotion = usePrefersReducedMotion();
   const [currentWhisper, setCurrentWhisper] = useState("Silence is where thoughts bloom.");
+  const currentWhisperRef = useRef(currentWhisper);
   const [fadeAlpha, setFadeAlpha] = useState(1);
   const [pulseLevel, setPulseLevel] = useState(0);
   const [forceWhisper, setForceWhisper] = useState<string | null>(null);
   const [whisperPulse, setWhisperPulse] = useState<{ radius: number; alpha: number } | null>(null);
 
-  const [quoteIndex, setQuoteIndex] = useState(0);
+  const quoteIndexRef = useRef(0);
 
   const mouse = useRef({ x: 0, y: 0 });
   const mouseStill = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
@@ -24,6 +27,10 @@ export default function IrisBackground({ memoryCount, memoryTrigger, archive }: 
   const attentionParticles = useRef<{ x: number; y: number; alpha: number; vx: number; vy: number }[]>([]);
 
   const [starTint, setStarTint] = useState(0);
+
+    useEffect(() => {
+    currentWhisperRef.current = currentWhisper;
+  }, [currentWhisper]);
 
   const quotes = useMemo(
     () => [
@@ -265,7 +272,7 @@ export default function IrisBackground({ memoryCount, memoryTrigger, archive }: 
       ctx.shadowBlur = 16;
       ctx.fillStyle = `rgba(255,255,255,${fadeAlpha})`;
       ctx.textAlign = "center";
-      ctx.fillText(currentWhisper, cx, cy + r + 34 + Math.sin(t * 1.5) * 4);
+      ctx.fillText(currentWhisperRef.current, cx, cy + r + 34 + Math.sin(t * 1.5) * 4);
       ctx.restore();
 
       if (fadeAlpha < 1) setFadeAlpha(a => Math.min(a + 0.03, 1));
@@ -312,15 +319,22 @@ useEffect(() => {
   useEffect(() => {
     if (reduceMotion) return;
     const interval = setInterval(() => {
-      const quote = forceWhisper || (archive.length > 0
-        ? (archive.slice(-12)[Math.floor(Math.random() * Math.min(12, archive.length))]?.fileName || "")
-        : quotes[Math.floor(Math.random() * quotes.length)]);
+       let quote;
+      if (forceWhisper) {
+        quote = forceWhisper;
+      } else if (archive.length > 0) {
+        const files = archive.slice(-12);
+        quote = files[Math.floor(Math.random() * files.length)]?.fileName || "";
+      } else {
+        quote = quotes[quoteIndexRef.current];
+        quoteIndexRef.current = (quoteIndexRef.current + 1) % quotes.length;
+      }
       setCurrentWhisper(quote);
       setFadeAlpha(0);
       setPulseLevel(1);
       setWhisperPulse({ radius: 30, alpha: 0.3 });
       setForceWhisper(null);
-    }, 14000);
+    }, QUOTE_CHANGE_MS);
     return () => clearInterval(interval);
   }, [forceWhisper, archive, reduceMotion, quotes]);
 
