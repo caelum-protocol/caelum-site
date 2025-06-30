@@ -45,6 +45,14 @@ export default function HomePage() {
           className="relative z-20 w-full min-h-screen snap-start flex flex-col items-center justify-center"
         >
           <div className="w-full max-w-screen-md px-4 flex flex-col items-center justify-center">
+          
+            <Link
+              href="/uploader"
+              className="mt-8 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:from-green-600 hover:to-blue-600 transition text-lg"
+            >
+              🚀 Try the Standalone Arweave Uploader
+            </Link>
+            
             <img
               src="/logo.png"
               alt="Caelum Logo"
@@ -100,15 +108,7 @@ export default function HomePage() {
                 🔹 Read the Origin
               </a>
             </div>
-
-            {/* Prominent link to standalone uploader */}
-            <Link
-              href="/uploader"
-              className="mt-8 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:from-green-600 hover:to-blue-600 transition text-lg"
-            >
-              🚀 Try the Standalone Arweave Uploader
-            </Link>
-
+          
             <div className="mt-10 text-yellow-300 text-lg font-medium tracking-wide">
               Memory Shard Mint + Companion Demo: <span className="italic">Awakening Soon</span>
             </div>
