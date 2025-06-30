@@ -80,7 +80,7 @@ export const Header = () => {
           Sound: {soundOn ? "\ud83d\udd0a On" : "\ud83d\udd07 Off"}
         </button>
         <Link
-          href="/shards"
+          href="/shard"
           className="text-cyan-400 text-sm hover:underline hidden sm:inline"
         >
           View Shards

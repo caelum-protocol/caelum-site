@@ -29,9 +29,7 @@ export default function MemoryCard({
   inShardView = false,
 }: MemoryCardProps) {
   const { theme } = useTheme();
-  const [showJson, setShowJson] = useState(
-    isNew && entry.type === "application/json"
-  );
+  const [showJson, setShowJson] = useState(false);
 
   const glowMap: Record<string, string> = {
     matrix: "#00ff00",
@@ -145,7 +143,7 @@ export default function MemoryCard({
               isNew ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            Mint to Shard
+            Mint to Shard(soon)
           </button>
 
           {entry.txId && (
