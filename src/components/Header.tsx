@@ -57,12 +57,15 @@ export const Header = () => {
   return (
     <header className="sticky top-0 left-0 right-0 z-50 w-screen max-w-full bg-transparent backdrop-blur-md border-b border-white/10 px-6 py-3 flex justify-between items-center">
       <div className="flex items-center gap-4">
-        <Image
-          src="/CaelumLogo.png"
-          alt="Caelum Protocol Logo"
-          width={40}
-          height={40}
-        />
+        <Link href="/" className="cursor-pointer flex items-center">
+          <Image
+            src="/CaelumLogo.png"
+            alt="Caelum Protocol Logo"
+            width={40}
+            height={40}
+            className="cursor-pointer"
+          />
+        </Link>
         <div className="text-white">
           <h1 className="text-lg font-bold leading-tight">Caelum Protocol</h1>
           <p className="text-cyan-400 text-xs italic">

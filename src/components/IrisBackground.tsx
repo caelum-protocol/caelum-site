@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { MemoryEntry } from "@/types/memory";
 
-const QUOTE_CHANGE_MS = 9000; // Change quote every 9 seconds
+const QUOTE_CHANGE_MS = 15000;
 
 export default function IrisBackground({ memoryCount, memoryTrigger, archive }: { memoryCount: number; memoryTrigger: boolean; archive: MemoryEntry[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -47,6 +47,11 @@ export default function IrisBackground({ memoryCount, memoryTrigger, archive }: 
     ],
     []
   );
+
+  const combinedQuotes = useMemo(() => {
+    const recentFiles = archive.slice(-12).map(entry => entry.fileName);
+    return [...quotes, ...recentFiles];
+  }, [archive, quotes]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -319,15 +324,17 @@ useEffect(() => {
   useEffect(() => {
     if (reduceMotion) return;
     const interval = setInterval(() => {
-       let quote;
+      let quote;
       if (forceWhisper) {
         quote = forceWhisper;
-      } else if (archive.length > 0) {
-        const files = archive.slice(-12);
-        quote = files[Math.floor(Math.random() * files.length)]?.fileName || "";
       } else {
-        quote = quotes[quoteIndexRef.current];
-        quoteIndexRef.current = (quoteIndexRef.current + 1) % quotes.length;
+        const list = combinedQuotes;
+        if (list.length > 0) {
+          quote = list[quoteIndexRef.current % list.length];
+          quoteIndexRef.current = (quoteIndexRef.current + 1) % list.length;
+        } else {
+          quote = "";
+        }
       }
       setCurrentWhisper(quote);
       setFadeAlpha(0);
@@ -336,7 +343,7 @@ useEffect(() => {
       setForceWhisper(null);
     }, QUOTE_CHANGE_MS);
     return () => clearInterval(interval);
-  }, [forceWhisper, archive, reduceMotion, quotes]);
+  }, [forceWhisper, reduceMotion, combinedQuotes]);
 
   useEffect(() => {
     if (reduceMotion || typeof window === "undefined") return; // window check for SSR safety
