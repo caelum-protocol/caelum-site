@@ -12,12 +12,10 @@ import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import useMounted from "@/utils/useMounted";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ShardPage() {
   const { theme } = useTheme();
-  const mounted = useMounted();
   const { archive } = useMemory();
   const params = useParams<{ txId: string }>();
   const txId = params?.txId;
@@ -26,16 +24,15 @@ export default function ShardPage() {
   const [totalSize, setTotalSize] = useState(0);
 
   useEffect(() => {
-    if (!mounted) return;
     if (txId && archive.length > 0) {
       const filtered = archive.filter((entry) => entry.txId === txId);
       setShardItems(filtered);
       const size = filtered.reduce((acc, curr) => acc + parseInt(curr.size), 0);
       setTotalSize(size);
     }
-  }, [txId, archive, mounted]);
+  }, [txId, archive]);
 
-    if (!mounted || !txId || shardItems === null) return null;
+    if (!txId || shardItems === null) return null;
 
   const downloadShardZip = async () => {
     const zip = new JSZip();

@@ -4,7 +4,6 @@ import { Web3Provider } from "@/providers/web3";
 import { Toaster } from "react-hot-toast";
 import { ThemeClientWrapper } from "@/components/ThemeClientWrapper";
 import { useEffect, useState } from "react";
-import useMounted from "../utils/useMounted";
 import { AnimatePresence } from "framer-motion";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { useHeartbeat } from "@/hooks/useHeartbeat"; // ✅ Use named import
@@ -14,7 +13,6 @@ type LayoutClientProps = {
 };
 
 export default function LayoutClient({ children }: LayoutClientProps) {
-  const mounted = useMounted();
   useHeartbeat();
 
   // Use only showLoader and sessionStorage
@@ -36,7 +34,6 @@ export default function LayoutClient({ children }: LayoutClientProps) {
     }
   }, [showLoader]);
 
-  if (!mounted) return null;
 
   return (
     <ThemeClientWrapper>

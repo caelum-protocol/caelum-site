@@ -6,7 +6,6 @@ import Head from "next/head";
 import { useMemory } from "@/context/MemoryContext";
 import type { MemoryEntry } from "@/types/memory";
 import formatBytes from "@/utils/formatBytes";
-import useMounted from "@/utils/useMounted";
 import { useTheme } from "@/context/ThemeContext";
 
 interface ShardSummary {
@@ -18,12 +17,10 @@ interface ShardSummary {
 
 export default function ShardsPage() {
   const { theme } = useTheme();
-  const mounted = useMounted();
   const { archive } = useMemory();
   const [shards, setShards] = useState<ShardSummary[]>([]);
 
   useEffect(() => {
-    if (!mounted) return;
     const map = new Map<string, ShardSummary>();
     archive.forEach((entry: MemoryEntry) => {
       const existing = map.get(entry.txId);
@@ -43,9 +40,7 @@ export default function ShardsPage() {
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
     setShards(arr);
-  }, [archive, mounted]);
-
-  if (!mounted) return null;
+  }, [archive]);
 
   return (
     <>
