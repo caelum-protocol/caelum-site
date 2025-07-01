@@ -69,7 +69,7 @@ export const Header = () => {
         <div className="text-white">
           <h1 className="text-lg font-bold leading-tight">Caelum Protocol</h1>
           <p className="text-cyan-400 text-xs italic">
-            Drop a file. Forge a memory. Shards are forever.
+            Drop a file. Forge a memory.
           </p>
         </div>
       </div>
