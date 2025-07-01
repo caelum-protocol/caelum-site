@@ -167,3 +167,6 @@ export default function HomePage() {
   );
 }
 
+export async function getStaticProps() {
+  return { props: {} };
+}

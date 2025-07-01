@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Head from "next/head";
@@ -17,7 +19,8 @@ export default function ShardPage() {
   const { theme } = useTheme();
   const mounted = useMounted();
   const { archive } = useMemory();
-  const { txId } = useParams<{ txId: string }>();
+  const params = useParams<{ txId: string }>();
+  const txId = params?.txId;
 
   const [shardItems, setShardItems] = useState<MemoryEntry[] | null>(null);
   const [totalSize, setTotalSize] = useState(0);
