@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Head from "next/head";
 import { useMemory } from "@/context/MemoryContext";
 import MemoryCard from "@/components/MemoryCard";
@@ -14,13 +13,15 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 
-export default function ShardPage() {
+interface ShardPageProps {
+  txId?: string;
+}
+
+export default function ShardPage({ txId }: ShardPageProps) {
   const { theme } = useTheme();
   const { archive } = useMemory();
-  const params = useParams<{ txId: string }>();
-  const txId = params?.txId;
 
-  const [shardItems, setShardItems] = useState<MemoryEntry[] | null>(null);
+  const [shardItems, setShardItems] = useState<MemoryEntry[]>([]);
   const [totalSize, setTotalSize] = useState(0);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function ShardPage() {
     }
   }, [txId, archive]);
 
-    if (!txId || shardItems === null) return null;
+    if (!txId) return null;
 
   const downloadShardZip = async () => {
     const zip = new JSZip();
@@ -60,7 +61,7 @@ export default function ShardPage() {
   };
 
   return (
-     <>
+    <>
       <Head>
         <title>{`Shard ${txId} – Caelum Protocol`}</title>
         <meta name="description" content="View files stored in this Caelum Protocol shard." />
@@ -135,4 +136,9 @@ export default function ShardPage() {
     </main>
     </>
   );
+ }
+
+export async function getServerSideProps(context: { params: { txId?: string } }) {
+  const { txId } = context.params || {};
+  return { props: { txId: txId || null } };
 }
