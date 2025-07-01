@@ -49,7 +49,7 @@ export default function UploaderPage() {
               <MemoryArchive />
             </div>
              
-             <p className="text-lg text-gray-200 mb-4 max-w-2xl text-center z-10">
+             <p className="text-.6g text-gray-200 mb-4 max-w-2xl text-center z-10">
             Arweave Uploader lets you instantly and permanently upload files to Arweave—no signup required. Start using decentralized, blockchain-based storage with a single click.
             </p>
 
