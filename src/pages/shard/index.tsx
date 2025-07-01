@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import { useMemory } from "@/context/MemoryContext";
 import type { MemoryEntry } from "@/types/memory";
 import formatBytes from "@/utils/formatBytes";
@@ -47,7 +48,24 @@ export default function ShardsPage() {
   if (!mounted) return null;
 
   return (
-    <main className={`${theme} relative z-30 min-h-screen flex flex-col items-center justify-start px-2 sm:px-4 py-16 sm:py-24 text-center transition-colors duration-300`}>
+    <>
+      <Head>
+        <title>All Shards – Caelum Protocol</title>
+        <meta name="description" content="Browse all memory shards uploaded with Caelum Protocol." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="All Shards – Caelum Protocol" />
+        <meta property="og:description" content="Browse all memory shards uploaded with Caelum Protocol." />
+        <meta property="og:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta property="og:url" content="https://caelumprotocol.org/shard" />
+        <meta property="og:site_name" content="Caelum Protocol" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="All Shards – Caelum Protocol" />
+        <meta name="twitter:description" content="Browse all memory shards uploaded with Caelum Protocol." />
+        <meta name="twitter:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta name="twitter:site" content="@CaelumProtocol" />
+        <link rel="icon" href="/caelum-favicon.ico" />
+      </Head>
+      <main className={`${theme} relative z-30 min-h-screen flex flex-col items-center justify-start px-2 sm:px-4 py-16 sm:py-24 text-center transition-colors duration-300`}>
       <h2 className="text-3xl font-bold text-white mb-8">🧩 All Shards</h2>
       {shards.length === 0 ? (
         <p className="text-gray-400">No shards found.</p>
@@ -80,5 +98,6 @@ export default function ShardsPage() {
         ⬅ Back to Archive
       </Link>
     </main>
+    </>
   );
 }

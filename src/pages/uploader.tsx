@@ -22,11 +22,13 @@ export default function UploaderPage() {
         <meta property="og:description" content="Instantly upload files to Arweave with the Caelum Protocol Arweave Uploader. Secure, permanent, and easy to use. Decentralized AI memory starts here." />
         <meta property="og:image" content="https://caelumprotocol.org/og-v2.png" />
         <meta property="og:url" content="https://caelumprotocol.org/uploader" />
+        <meta property="og:site_name" content="Caelum Protocol" />
         {/* Twitter Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Arweave Uploader – Caelum Protocol | Decentralized AI Memory Vault" />
         <meta name="twitter:description" content="Instantly upload files to Arweave with the Caelum Protocol Arweave Uploader. Secure, permanent, and easy to use. Decentralized AI memory starts here." />
         <meta name="twitter:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta name="twitter:site" content="@CaelumProtocol" />
         <link rel="icon" href="/caelum-favicon.ico" />
       </Head>
       <main className="relative min-h-screen h-screen bg-black text-white overflow-y-auto overflow-x-hidden snap-y snap-mandatory w-screen">

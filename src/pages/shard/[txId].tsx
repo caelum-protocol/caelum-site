@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Head from "next/head";
 import { useMemory } from "@/context/MemoryContext";
 import MemoryCard from "@/components/MemoryCard";
 import type { MemoryEntry } from "@/types/memory";
@@ -61,7 +62,24 @@ export default function ShardPage() {
   };
 
   return (
-     <main className={`${theme} relative z-30 min-h-screen flex flex-col items-center justify-start px-2 sm:px-4 py-16 sm:py-24 text-center transition-colors duration-300`}>
+     <>
+      <Head>
+        <title>{`Shard ${txId} – Caelum Protocol`}</title>
+        <meta name="description" content="View files stored in this Caelum Protocol shard." />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`Shard ${txId} – Caelum Protocol`} />
+        <meta property="og:description" content="View files stored in this Caelum Protocol shard." />
+        <meta property="og:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta property="og:url" content={`https://caelumprotocol.org/shard/${txId}`} />
+        <meta property="og:site_name" content="Caelum Protocol" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Shard ${txId} – Caelum Protocol`} />
+        <meta name="twitter:description" content="View files stored in this Caelum Protocol shard." />
+        <meta name="twitter:image" content="https://caelumprotocol.org/og-v2.png" />
+        <meta name="twitter:site" content="@CaelumProtocol" />
+        <link rel="icon" href="/caelum-favicon.ico" />
+      </Head>
+      <main className={`${theme} relative z-30 min-h-screen flex flex-col items-center justify-start px-2 sm:px-4 py-16 sm:py-24 text-center transition-colors duration-300`}>
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-white mb-2">
           📦 Shard: <span className="text-purple-300">{txId}</span>
@@ -117,5 +135,6 @@ export default function ShardPage() {
         ⬅ Back to Archive
       </Link>
     </main>
+    </>
   );
 }
