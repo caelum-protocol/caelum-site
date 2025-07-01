@@ -166,7 +166,7 @@ export default function HomePage() {
     </>
   );
 }
-
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return { props: {} };
 }
+
