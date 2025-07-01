@@ -6,7 +6,7 @@ import { ThemeClientWrapper } from "@/components/ThemeClientWrapper";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import { useHeartbeat } from "@/hooks/useHeartbeat"; // ✅ Use named import
+import { useHeartbeat } from "@/hooks/useHeartbeat";
 
 type LayoutClientProps = {
   children: React.ReactNode;
@@ -15,24 +15,12 @@ type LayoutClientProps = {
 export default function LayoutClient({ children }: LayoutClientProps) {
   useHeartbeat();
 
-  // Use only showLoader and sessionStorage
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return !sessionStorage.getItem("loaderShown");
-  });
+  const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
-    if (showLoader) {
-      const timer = setTimeout(() => {
-        if (typeof window !== "undefined") {
-          // Persist loader flag client-side only for Next.js SSR
-          sessionStorage.setItem("loaderShown", "true");
-        }
-        setShowLoader(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [showLoader]);
+    const timer = setTimeout(() => setShowLoader(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
 
   return (
