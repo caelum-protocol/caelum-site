@@ -1,0 +1,1 @@
+(()=>{let e=null;self.onmessage=t=>{"start"!==t.data||e||(e=setInterval(()=>{self.postMessage({type:"heartbeat",timestamp:Date.now()})},3e4)),"stop"===t.data&&e&&(clearInterval(e),e=null)},self.onclose=()=>{e&&clearInterval(e)},_N_E={}})();
