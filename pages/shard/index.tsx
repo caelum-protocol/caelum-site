@@ -46,6 +46,7 @@ export default function ShardsPage() {
     <>
       <Head>
         <title>All Shards – Caelum Protocol</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Browse all memory shards uploaded with Caelum Protocol." />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="All Shards – Caelum Protocol" />

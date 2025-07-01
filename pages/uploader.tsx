@@ -14,6 +14,7 @@ export default function UploaderPage() {
     <>
       <Head>
         <title>Arweave Uploader – Caelum Protocol | Decentralized AI Memory Vault</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Instantly upload files to Arweave with the Caelum Protocol Arweave Uploader. Secure, permanent, and easy to use. Decentralized AI memory starts here." />
         <meta name="keywords" content="arweave uploader, arweave, decentralized storage, permanent file upload, AI memory vault, caelum protocol" />
         {/* Open Graph Meta Tags */}

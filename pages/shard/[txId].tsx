@@ -64,6 +64,7 @@ export default function ShardPage({ txId }: ShardPageProps) {
     <>
       <Head>
         <title>{`Shard ${txId} – Caelum Protocol`}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="View files stored in this Caelum Protocol shard." />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`Shard ${txId} – Caelum Protocol`} />
