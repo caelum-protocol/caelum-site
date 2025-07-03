@@ -3,16 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import WebUploader from "@irys/web-upload";
-import {
-  WebEthereum,
-  WebMatic,
-  WebUSDCPolygon,
-  WebArbitrum,
-  WebBNB,
-  WebAvalanche,
-} from "@irys/web-upload-ethereum";
-import WebBase from "@irys/web-upload-ethereum";
-import WebOptimism from "@irys/web-upload-ethereum";
+import { WebMatic } from "@irys/web-upload-ethereum";
 import { EthersV6Adapter } from "@irys/web-upload-ethereum-ethers-v6";
 import { ethers } from "ethers";
 import toast from "react-hot-toast";
@@ -23,81 +14,12 @@ import MetadataPreview from "@/components/MetadataPreview";
 import { useMemory } from "@/context/MemoryContext";
 import type { MemoryEntry } from "@/types/memory";
 
-// --- List of supported tokens/networks for Irys
-const SUPPORTED_TOKENS = [
-  {
-    symbol: "MATIC",
-    name: "Polygon MATIC",
-    id: "matic",
-    chainId: 137,
-    tokenClass: WebMatic,
-    rpc: "https://polygon-rpc.com",
-  },
-  {
-    symbol: "USDC",
-    name: "Polygon USDC",
-    id: "usdc_polygon",
-    chainId: 137,
-    tokenClass: WebUSDCPolygon,
-    rpc: "https://polygon-rpc.com",
-  },
-  {
-    symbol: "ETH",
-    name: "Ethereum Mainnet",
-    id: "eth_mainnet",
-    chainId: 1,
-    tokenClass: WebEthereum,
-    rpc: "https://eth-mainnet.g.alchemy.com/v2/demo",
-  },
-  {
-    symbol: "ETH",
-    name: "Arbitrum One",
-    id: "eth_arbitrum",
-    chainId: 42161,
-    tokenClass: WebArbitrum,
-    rpc: "https://arb1.arbitrum.io/rpc",
-  },
-  {
-    symbol: "ETH",
-    name: "Optimism",
-    id: "eth_optimism",
-    chainId: 10,
-    tokenClass: WebOptimism,
-    rpc: "https://mainnet.optimism.io",
-  },
-  {
-    symbol: "BNB",
-    name: "BNB Chain",
-    id: "bnb",
-    chainId: 56,
-    tokenClass: WebBNB,
-    rpc: "https://bsc-dataseed.binance.org",
-  },
-  {
-    symbol: "AVAX",
-    name: "Avalanche",
-    id: "avax",
-    chainId: 43114,
-    tokenClass: WebAvalanche,
-    rpc: "https://api.avax.network/ext/bc/C/rpc",
-  },
-  {
-    symbol: "ETH",
-    name: "Base",
-    id: "eth_base",
-    chainId: 8453,
-    tokenClass: WebBase,
-    rpc: "https://mainnet.base.org",
-  },
-];
-
 export const FileUpload = () => {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const [selectedTokenIdx, setSelectedTokenIdx] = useState(0); // MATIC is default
   const { data: balanceData, refetch: refetchBalance } = useBalance({
     address,
-    chainId: SUPPORTED_TOKENS[selectedTokenIdx].chainId,
+    chainId: 137,
   });
   const userBalance = balanceData?.value ?? 0n;
 
@@ -110,40 +32,19 @@ export const FileUpload = () => {
   const [txId, setTxId] = useState("");
   const { addMemory } = useMemory();
 
+  // --- Irys uploader state ---
   const [irysUploader, setIrysUploader] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  // --- Network auto-switch logic
-  const switchToChain = async (targetChainId: number) => {
-    const hexChainId = "0x" + targetChainId.toString(16);
-    try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: hexChainId }],
-      });
-      return true;
-    } catch (err: any) {
-      toast.error("Chain switch rejected or failed. Please switch manually.");
-      return false;
-    }
-  };
-
-  // --- Irys uploader setup: per-token/chain
+  // --- Init Irys uploader when ready ---
   useEffect(() => {
     async function initIrys() {
       setIrysUploader(null);
       setErrorMsg("");
       if (!isConnected) return;
-
-      const token = SUPPORTED_TOKENS[selectedTokenIdx];
-      if (chainId !== token.chainId) {
-        const switched = await switchToChain(token.chainId);
-        if (!switched) {
-          setErrorMsg(
-            `Please switch wallet to ${token.name} (chain ${token.chainId}).`
-          );
-          return;
-        }
+      if (chainId !== 137) {
+        setErrorMsg("Please switch wallet to Polygon Mainnet (chain 137).");
+        return;
       }
       if (!window.ethereum) {
         setErrorMsg("No injected wallet found (window.ethereum missing).");
@@ -153,9 +54,10 @@ export const FileUpload = () => {
         await window.ethereum.request({ method: "eth_requestAccounts" });
         const provider = new ethers.BrowserProvider(window.ethereum);
 
-        const uploader = await WebUploader(token.tokenClass)
+        // This is the most current, supported v6 adapter pattern:
+        const uploader = await WebUploader(WebMatic)
           .withAdapter(EthersV6Adapter(provider))
-          .withRpc(token.rpc)
+          .withRpc("https://polygon-rpc.com")
           .mainnet();
 
         setIrysUploader(uploader);
@@ -164,8 +66,7 @@ export const FileUpload = () => {
       }
     }
     initIrys();
-    // re-run if token or network changes
-  }, [isConnected, chainId, selectedTokenIdx]);
+  }, [isConnected, chainId]);
 
   // --- Dropzone: File drop and price estimation ---
   const onDrop = useCallback(
@@ -188,8 +89,8 @@ export const FileUpload = () => {
       try {
         const priceAtomic = await irysUploader.getPrice(selectedFile.size);
         const priceBigInt = BigInt(priceAtomic.toString());
-        const priceHuman = irysUploader.utils.fromAtomic(priceAtomic).toString();
-        setUploadCost(priceHuman);
+        const priceMatic = irysUploader.utils.fromAtomic(priceAtomic).toString();
+        setUploadCost(priceMatic);
 
         if (userBalance < priceBigInt) {
           setInsufficientFunds(true);
@@ -216,8 +117,8 @@ export const FileUpload = () => {
       return;
     }
     if (insufficientFunds) {
-      toast.error("Insufficient balance.");
-      setUploadStatus("Insufficient balance.");
+      toast.error("Insufficient MATIC balance.");
+      setUploadStatus("Insufficient MATIC balance.");
       return;
     }
 
@@ -231,7 +132,7 @@ export const FileUpload = () => {
 
       if (userBalance < priceBigInt) {
         setInsufficientFunds(true);
-        setUploadStatus("Insufficient balance.");
+        setUploadStatus("Insufficient MATIC balance.");
         return;
       }
 
@@ -277,21 +178,7 @@ export const FileUpload = () => {
   // --- UI ---
   return (
     <div className="relative">
-      {/* Token select menu - dark theme */}
-      <div className="flex justify-center mb-4">
-        <select
-          value={selectedTokenIdx}
-          onChange={e => setSelectedTokenIdx(Number(e.target.value))}
-          className="px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
-        >
-          {SUPPORTED_TOKENS.map((tok, i) => (
-            <option key={tok.id} value={i}>
-              {tok.name} ({tok.symbol})
-            </option>
-          ))}
-        </select>
-      </div>
-
+      {/* (Optional) Show error if uploader failed to init */}
       {errorMsg && (
         <div className="text-red-400 mb-2 font-bold">{errorMsg}</div>
       )}
@@ -316,7 +203,7 @@ export const FileUpload = () => {
           <div className="mb-2">{uploadStatus}</div>
           {insufficientFunds && (
             <div className="text-red-500 font-semibold">
-              Insufficient {SUPPORTED_TOKENS[selectedTokenIdx].symbol} for upload
+              Insufficient MATIC for upload
             </div>
           )}
           <div className="text-center">
