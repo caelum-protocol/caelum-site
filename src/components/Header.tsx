@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ConnectKitButton } from "connectkit";
+import dynamic from "next/dynamic";
+const ConnectKitButton = dynamic(
+  () => import("connectkit").then((mod) => mod.ConnectKitButton),
+  { ssr: false }
+);
 import { useAccount, useChainId } from "wagmi";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSoundEnabled } from "@/context/SoundContext";
