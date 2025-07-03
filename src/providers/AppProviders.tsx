@@ -11,22 +11,18 @@ import LayoutClient from "@/components/layoutClient";
 const queryClient = new QueryClient(); // <-- outside the function
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
-  const isServer = typeof window === "undefined";
-
-  const content = (
-    <SoundProvider>
-      <ThemeProvider>
-        <MemoryProvider>
-          <LayoutClient>{children}</LayoutClient>
-        </MemoryProvider>
-      </ThemeProvider>
-    </SoundProvider>
-  );
-
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-      {isServer ? content : <ConnectKitProvider>{content}</ConnectKitProvider>}
+        <ConnectKitProvider>
+          <SoundProvider>
+            <ThemeProvider>
+              <MemoryProvider>
+                <LayoutClient>{children}</LayoutClient>
+              </MemoryProvider>
+            </ThemeProvider>
+          </SoundProvider>
+        </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
