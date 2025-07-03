@@ -1,18 +1,8 @@
 // next.config.js
 const webpack = require('webpack');
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   reactStrictMode: true,
-
-  // NEW: Transpile ESM packages (fixes Next.js/ESM/SSR issues)
-  transpilePackages: [
-    "viem",
-    "wagmi",
-    "ethers",
-    // add others as needed
-  ],
-
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Polyfills for Node.js core modules used by Web3/Irys SDKs
@@ -36,5 +26,3 @@ const nextConfig = {
     return config;
   },
 };
-
-module.exports = nextConfig;
