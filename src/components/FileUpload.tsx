@@ -1,161 +1,250 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle } from "lucide-react";
-import { WebIrys } from "@irys/sdk";
-import { Web3Provider } from "@ethersproject/providers";
-import { BigNumber } from "@ethersproject/bignumber";
-import { formatEther, ethers } from "ethers";
-import { Buffer } from "buffer";
+import { useState, useEffect, useCallback } from "react";
+import { useAccount, useBalance, useChainId } from "wagmi";
+import WebUploader from "@irys/web-upload";
+import {
+  WebEthereum,
+  WebMatic,
+  WebUSDCPolygon,
+  WebArbitrum,
+  WebBNB,
+  WebAvalanche,
+} from "@irys/web-upload-ethereum";
+import WebBase from "@irys/web-upload-ethereum";
+import WebOptimism from "@irys/web-upload-ethereum";
+import { EthersV6Adapter } from "@irys/web-upload-ethereum-ethers-v6";
+import { ethers } from "ethers";
 import toast from "react-hot-toast";
 
-import MetadataPreview from "@/components/MetadataPreview";
 import Dropzone from "@/components/Dropzone";
 import { UploadButton } from "@/components/UploadButton";
-import { StatusIndicator } from "@/components/StatusIndicator";
-
+import MetadataPreview from "@/components/MetadataPreview";
 import { useMemory } from "@/context/MemoryContext";
-import type { MemoryEntry } from "../types/memory"; 
+import type { MemoryEntry } from "@/types/memory";
+
+// --- List of supported tokens/networks for Irys
+const SUPPORTED_TOKENS = [
+  {
+    symbol: "MATIC",
+    name: "Polygon MATIC",
+    id: "matic",
+    chainId: 137,
+    tokenClass: WebMatic,
+    rpc: "https://polygon-rpc.com",
+  },
+  {
+    symbol: "USDC",
+    name: "Polygon USDC",
+    id: "usdc_polygon",
+    chainId: 137,
+    tokenClass: WebUSDCPolygon,
+    rpc: "https://polygon-rpc.com",
+  },
+  {
+    symbol: "ETH",
+    name: "Ethereum Mainnet",
+    id: "eth_mainnet",
+    chainId: 1,
+    tokenClass: WebEthereum,
+    rpc: "https://eth-mainnet.g.alchemy.com/v2/demo",
+  },
+  {
+    symbol: "ETH",
+    name: "Arbitrum One",
+    id: "eth_arbitrum",
+    chainId: 42161,
+    tokenClass: WebArbitrum,
+    rpc: "https://arb1.arbitrum.io/rpc",
+  },
+  {
+    symbol: "ETH",
+    name: "Optimism",
+    id: "eth_optimism",
+    chainId: 10,
+    tokenClass: WebOptimism,
+    rpc: "https://mainnet.optimism.io",
+  },
+  {
+    symbol: "BNB",
+    name: "BNB Chain",
+    id: "bnb",
+    chainId: 56,
+    tokenClass: WebBNB,
+    rpc: "https://bsc-dataseed.binance.org",
+  },
+  {
+    symbol: "AVAX",
+    name: "Avalanche",
+    id: "avax",
+    chainId: 43114,
+    tokenClass: WebAvalanche,
+    rpc: "https://api.avax.network/ext/bc/C/rpc",
+  },
+  {
+    symbol: "ETH",
+    name: "Base",
+    id: "eth_base",
+    chainId: 8453,
+    tokenClass: WebBase,
+    rpc: "https://mainnet.base.org",
+  },
+];
 
 export const FileUpload = () => {
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const [selectedTokenIdx, setSelectedTokenIdx] = useState(0); // MATIC is default
+  const { data: balanceData, refetch: refetchBalance } = useBalance({
+    address,
+    chainId: SUPPORTED_TOKENS[selectedTokenIdx].chainId,
+  });
+  const userBalance = balanceData?.value ?? 0n;
+
   const [file, setFile] = useState<File | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string>("");
-  const [uploadCost, setUploadCost] = useState<string>("");
-  const [txId, setTxId] = useState<string>("");
-  const [showCheck, setShowCheck] = useState(false);
-  const [note, setNote] = useState<string>("");
-
-  // New states for balance/gas
-  const [userEthBalance, setUserEthBalance] = useState<number | null>(null);
-  const [gasNeededEth, setGasNeededEth] = useState<number | null>(null);
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [uploadCost, setUploadCost] = useState("");
   const [insufficientFunds, setInsufficientFunds] = useState(false);
-
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
+  const [note, setNote] = useState("");
+  const [txId, setTxId] = useState("");
   const { addMemory } = useMemory();
 
-  // Helper: get Irys instance (v5 provider for irys)
-  const getIrys = useCallback(async () => {
-    if (typeof window === "undefined" || !window.ethereum)
-      throw new Error("No crypto wallet found");
-    const provider = new Web3Provider(window.ethereum);
-    const irys = new WebIrys({
-      network: "mainnet",
-      token: "matic",
-      wallet: { name: "ethersv5", provider },
-    });
-    await irys.ready();
-    return irys;
-  }, []);
+  const [irysUploader, setIrysUploader] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
-  // Helper: check user's ETH and estimate gas for funding tx
-  const checkBalanceAndGas = useCallback(async (fileSize: number, irys?: any) => {
-    if (typeof window === "undefined" || !window.ethereum) return { sufficient: false, needed: null, balance: null };
+  // --- Network auto-switch logic
+  const switchToChain = async (targetChainId: number) => {
+    const hexChainId = "0x" + targetChainId.toString(16);
     try {
-      const provider = new Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      const userAddress = await signer.getAddress();
-      const userBalanceWei = await provider.getBalance(userAddress);
-      const userBalanceEth = parseFloat(formatEther(userBalanceWei.toString()));;
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: hexChainId }],
+      });
+      return true;
+    } catch (err: any) {
+      toast.error("Chain switch rejected or failed. Please switch manually.");
+      return false;
+    }
+  };
 
-      const _irys = irys || await getIrys();
-      const price = await _irys.getPrice(fileSize);
+  // --- Irys uploader setup: per-token/chain
+  useEffect(() => {
+    async function initIrys() {
+      setIrysUploader(null);
+      setErrorMsg("");
+      if (!isConnected) return;
 
-      // Defensive: check that tokenConfig and funder exist
-      let funder = _irys.tokenConfig?.funder;
-      if (!funder) {
-        // fallback: try to get from _irys.wallet?.address or default
-        funder = _irys.wallet?.address || ethers.ZeroAddress;
+      const token = SUPPORTED_TOKENS[selectedTokenIdx];
+      if (chainId !== token.chainId) {
+        const switched = await switchToChain(token.chainId);
+        if (!switched) {
+          setErrorMsg(
+            `Please switch wallet to ${token.name} (chain ${token.chainId}).`
+          );
+          return;
+        }
       }
-
-      const fundTx = {
-        to: funder,
-        value: price.toString(),
-      };
-
-      // Defensive: fallback to default gas if estimate fails
-      let estimatedGas = BigNumber.from("21000");
+      if (!window.ethereum) {
+        setErrorMsg("No injected wallet found (window.ethereum missing).");
+        return;
+      }
       try {
-        estimatedGas = await signer.estimateGas(fundTx);
-      } catch (e) {
-        // ignore, fallback to default
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.BrowserProvider(window.ethereum);
+
+        const uploader = await WebUploader(token.tokenClass)
+          .withAdapter(EthersV6Adapter(provider))
+          .withRpc(token.rpc)
+          .mainnet();
+
+        setIrysUploader(uploader);
+      } catch (err: any) {
+        setErrorMsg(err.message || "Irys initialization failed");
       }
-      const gasPrice = await provider.getGasPrice();
-      const totalGasCostWei = estimatedGas.mul(gasPrice);
-      const totalGasCostEth = parseFloat(formatEther(totalGasCostWei.toString()));
-      setGasNeededEth(totalGasCostEth);
-      setUserEthBalance(userBalanceEth);
-
-      const sufficient = userBalanceEth >= totalGasCostEth;
-      setInsufficientFunds(!sufficient);
-      return { sufficient, needed: totalGasCostEth, balance: userEthBalance };
-    } catch (e) {
-      setUploadStatus("Unable to estimate gas or check balance.");
-      setInsufficientFunds(true);
-      return { sufficient: false, needed: null, balance: null };
     }
-  }, [getIrys]);
+    initIrys();
+    // re-run if token or network changes
+  }, [isConnected, chainId, selectedTokenIdx]);
 
-  // Estimate gas and check balance on file drop
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
-    const selectedFile = acceptedFiles[0];
-    setFile(selectedFile);
-    setUploadStatus("");
-    setTxId("");
-    setUploadCost("");
-    setInsufficientFunds(false);
+  // --- Dropzone: File drop and price estimation ---
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      setFile(null);
+      setUploadCost("");
+      setUploadStatus("");
+      setInsufficientFunds(false);
 
-    try {
-      setUploadStatus("Getting upload cost...");
-      const irys = await getIrys();
-      const price = await irys.getPrice(selectedFile.size);
-      const cost = irys.utils.fromAtomic(price).toString();
-      setUploadCost(cost);
-      setUploadStatus("Cost retrieved. Estimating gas…");
-
-      // Check balance and gas before enabling upload
-      await checkBalanceAndGas(selectedFile.size, irys);
-
-      setUploadStatus("Cost and gas estimated. Ready to upload.");
-    } catch (e) {
-      console.error(e);
-      setUploadStatus(`Error: ${(e as Error).message}`);
-      toast.error("Failed to retrieve upload cost or gas estimate");
-    }
-  }, [getIrys, checkBalanceAndGas]);
-
-  // Double check balance/gas before uploading!
-  const handleUpload = async () => {
-    if (!file) return toast.error("Please select a file first.");
-
-    try {
-      setUploadStatus("Re-checking gas and balance...");
-      const irys = await getIrys();
-      const { sufficient, needed, balance } = await checkBalanceAndGas(file.size, irys);
-      if (!sufficient) {
-        setUploadStatus("Insufficient ETH for gas. Please fund your wallet.");
-        toast.error(`You need at least ${needed?.toFixed(6)} ETH, you have ${balance?.toFixed(6)} ETH.`);
-        setInsufficientFunds(true);
+      if (!acceptedFiles.length) return;
+      if (!irysUploader) {
+        setUploadStatus("Uploader not ready.");
         return;
       }
 
+      const selectedFile = acceptedFiles[0];
+      setFile(selectedFile);
+      setUploadStatus("Getting upload cost...");
+
+      try {
+        const priceAtomic = await irysUploader.getPrice(selectedFile.size);
+        const priceBigInt = BigInt(priceAtomic.toString());
+        const priceHuman = irysUploader.utils.fromAtomic(priceAtomic).toString();
+        setUploadCost(priceHuman);
+
+        if (userBalance < priceBigInt) {
+          setInsufficientFunds(true);
+          setUploadStatus("Insufficient funds for upload");
+        } else {
+          setInsufficientFunds(false);
+          setUploadStatus("Ready to upload");
+        }
+      } catch (e) {
+        setUploadStatus("Failed to estimate upload: " + (e as Error).message);
+        setUploadCost("");
+        toast.error("Upload price estimation failed: " + (e as Error).message);
+      }
+    },
+    [irysUploader, userBalance]
+  );
+
+  // --- Upload flow (fund + upload) ---
+  const handleUpload = async () => {
+    if (!file) return toast.error("No file selected.");
+    if (!irysUploader) {
+      toast.error("Uploader not ready.");
+      setUploadStatus("Uploader not ready.");
+      return;
+    }
+    if (insufficientFunds) {
+      toast.error("Insufficient balance.");
+      setUploadStatus("Insufficient balance.");
+      return;
+    }
+
+    try {
       setUploadStatus("Uploading...");
-      const buffer = Buffer.from(await file.arrayBuffer());
 
-      const price = await irys.getPrice(buffer.length);
-      setUploadStatus("Funding node...");
-      await irys.fund(price);
+      // Re-calc upload price
+      const buffer = await file.arrayBuffer();
+      const priceAtomic = await irysUploader.getPrice(buffer.byteLength);
+      const priceBigInt = BigInt(priceAtomic.toString());
 
-      setUploadStatus("Uploading file...");
-      const receipt = await irys.upload(buffer, {
+      if (userBalance < priceBigInt) {
+        setInsufficientFunds(true);
+        setUploadStatus("Insufficient balance.");
+        return;
+      }
+
+      await irysUploader.fund(priceAtomic);
+      setUploadStatus("Uploading to Irys...");
+
+      const receipt = await irysUploader.uploadFile(file, {
         tags: [{ name: "Content-Type", value: file.type }],
       });
 
       setTxId(receipt.id);
-      setUploadStatus("Upload successful!");
-      setShowCheck(true);
-      setTimeout(() => setShowCheck(false), 1200);
+      setUploadUrl(`https://gateway.irys.xyz/${receipt.id}`);
+      setUploadStatus("Upload complete!");
 
       const memory: MemoryEntry = {
         fileName: file.name,
@@ -169,51 +258,54 @@ export const FileUpload = () => {
       };
 
       addMemory(memory);
-      
+
       setTimeout(() => {
         setFile(null);
-        setUploadCost("");
         setUploadStatus("");
+        setUploadCost("");
         setTxId("");
         setNote("");
-      }, 1500);
-
-    } catch (e) {
-      console.error(e);
-      const errorMessage = (e as Error).message;
-      setUploadStatus(`Error: ${errorMessage}`);
-      toast.error(errorMessage || "Upload failed.");
+        setUploadUrl(null);
+      }, 2000);
+      await refetchBalance?.();
+    } catch (e: any) {
+      setUploadStatus(`Error: ${e.message}`);
+      toast.error("Upload failed: " + e.message);
     }
   };
 
+  // --- UI ---
   return (
     <div className="relative">
+      {/* Token select menu - dark theme */}
+      <div className="flex justify-center mb-4">
+        <select
+          value={selectedTokenIdx}
+          onChange={e => setSelectedTokenIdx(Number(e.target.value))}
+          className="px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow"
+        >
+          {SUPPORTED_TOKENS.map((tok, i) => (
+            <option key={tok.id} value={i}>
+              {tok.name} ({tok.symbol})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {errorMsg && (
+        <div className="text-red-400 mb-2 font-bold">{errorMsg}</div>
+      )}
+
       <Dropzone onDrop={onDrop} />
 
-      <AnimatePresence>
-        {showCheck && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          >
-            <CheckCircle className="w-16 h-16 text-green-400" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {file && (
+      {file && irysUploader && (
         <div className="mt-6 space-y-4 max-w-xl mx-auto text-white">
-          {uploadCost && (
-            <MetadataPreview
-              fileName={file.name}
-              type={file.type}
-              size={file.size}
-              cost={uploadCost}
-            />
-          )}
-
+          <MetadataPreview
+            fileName={file.name}
+            type={file.type}
+            size={file.size}
+            cost={uploadCost}
+          />
           <input
             type="text"
             placeholder="Add a note..."
@@ -221,44 +313,35 @@ export const FileUpload = () => {
             onChange={(e) => setNote(e.target.value)}
             className="w-full rounded border px-3 py-2 text-black"
           />
-
-          <StatusIndicator status={uploadStatus} />
-
+          <div className="mb-2">{uploadStatus}</div>
           {insufficientFunds && (
             <div className="text-red-500 font-semibold">
-              Insufficient ETH for gas (
-              {gasNeededEth?.toFixed(6)} ETH required,
-              you have {userEthBalance?.toFixed(6)} ETH).
-              Please fund your wallet before uploading.
+              Insufficient {SUPPORTED_TOKENS[selectedTokenIdx].symbol} for upload
             </div>
           )}
-
           <div className="text-center">
             <UploadButton
               onClick={handleUpload}
               disabled={
-                uploadStatus.includes("Uploading") ||
-                uploadStatus.includes("Funding") ||
                 !uploadCost ||
-                insufficientFunds
+                insufficientFunds ||
+                uploadStatus.includes("Uploading")
               }
             />
           </div>
         </div>
       )}
 
-      {/* The final confirmation section */}
-      {txId && (
-        <div className="mt-6 text-center text-green-400">
-          <h4 className="font-semibold text-lg">Upload Confirmed!</h4>
-          <p className="text-sm truncate px-4">Tx ID: {txId}</p>
+      {uploadUrl && (
+        <div className="mt-4 break-all text-center">
+          <span className="font-bold text-green-400">Success!</span>{" "}
           <a
-            href={`https://gateway.irys.xyz/${txId}`}
+            href={uploadUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-cyan-300 text-sm"
+            className="underline text-blue-300"
           >
-            View on Irys Gateway
+            View file
           </a>
         </div>
       )}

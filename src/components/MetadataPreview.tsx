@@ -23,7 +23,12 @@ const MetadataPreview: React.FC<MetadataPreviewProps> = ({
         <li><strong>📁 File:</strong> {fileName}</li>
         <li><strong>🧠 Type:</strong> {type}</li>
         <li><strong>⚖️ Size:</strong> {formatBytes(size)}</li>
-        <li><strong>💰 Estimated Cost:</strong> {parseFloat(cost).toFixed(6)} MATIC</li>
+        <li>
+          <strong>💰 Estimated Cost:</strong>{" "}
+          {cost && !isNaN(Number(cost))
+            ? `${parseFloat(cost).toFixed(6)} MATIC`
+            : "–"}
+        </li>
       </ul>
     </div>
   );

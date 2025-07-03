@@ -1,12 +1,8 @@
-"use client";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import { createConfig, http } from "wagmi";
 import { mainnet, polygon, sepolia, arbitrum, optimism, bsc, avalanche, base } from "wagmi/chains";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { getDefaultConfig } from "connectkit";
 
-const queryClient = new QueryClient();
-
-const config = createConfig(
+export const config = createConfig(
   getDefaultConfig({
     chains: [polygon, sepolia, mainnet, arbitrum, optimism, bsc, avalanche, base],
     transports: {
@@ -23,15 +19,3 @@ const config = createConfig(
     appName: "Caelum Uploader",
   })
 );
-
-export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>
-           {children}
-        </ConnectKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
-};
