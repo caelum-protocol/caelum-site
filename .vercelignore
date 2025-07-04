@@ -1,0 +1,26 @@
+# .vercelignore
+
+# Ignore tests, dev tools, build artifacts, and unnecessary files
+test/
+tests/
+__tests__/
+__mocks__/
+.storybook/
+storybook/
+.vscode/
+.idea/
+coverage/
+*.log
+*.tsbuildinfo
+tmp/
+temp/
+build/
+out/
+public/raw/
+uploads/
+scripts/
+examples/
+docs/
+node_modules/    # Vercel installs prod deps itself
+.next/
+*.md
