@@ -1,5 +1,9 @@
 const webpack = require("webpack");
-const withTM = require("next-transpile-modules")(["viem"]); // required for viem compatibility on Vercel
+const withTM = require("next-transpile-modules")([
+  "viem",
+  "wagmi",
+  "connectkit",
+]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
