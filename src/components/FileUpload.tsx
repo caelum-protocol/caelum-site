@@ -15,7 +15,8 @@ import { useMemory } from "@/context/MemoryContext";
 import type { MemoryEntry } from "@/types/memory";
 
 export const FileUpload = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
+  const isConnected = !!address;
   const chainId = useChainId();
   const { data: balanceData, refetch: refetchBalance } = useBalance({
     address,
@@ -31,6 +32,8 @@ export const FileUpload = () => {
   const [note, setNote] = useState("");
   const [txId, setTxId] = useState("");
   const { addMemory } = useMemory();
+
+  const [showWalletWarning, setShowWalletWarning] = useState(false);
 
   const [irysUploader, setIrysUploader] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -67,6 +70,10 @@ export const FileUpload = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+       if (!isConnected) {
+        setShowWalletWarning(true);
+        return;
+      }
       setFile(null);
       setUploadCost("");
       setUploadStatus("");
@@ -101,7 +108,7 @@ export const FileUpload = () => {
         toast.error("Upload price estimation failed: " + (e as Error).message);
       }
     },
-    [irysUploader, userBalance]
+    [isConnected, irysUploader, userBalance]
   );
 
   const handleUpload = async () => {
@@ -175,7 +182,9 @@ export const FileUpload = () => {
         <div className="text-red-400 mb-2 font-bold">{errorMsg}</div>
       )}
 
-      <Dropzone onDrop={onDrop} />
+      <div className={`relative ${!isConnected ? "opacity-50" : ""}`}> 
+        <Dropzone onDrop={onDrop} />
+      </div>
 
       {file && irysUploader && (
         <div className="mt-6 space-y-4 max-w-xl mx-auto text-white">
@@ -222,6 +231,22 @@ export const FileUpload = () => {
           >
             View file
           </a>
+        </div>
+      )}
+
+      {showWalletWarning && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70">
+          <div className="bg-black p-6 rounded text-center text-red max-w-sm">
+            <p className="mb-4">
+              🔐 Wallet Not Connected – Please connect your wallet before uploading files to Arweave.
+            </p>
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => setShowWalletWarning(false)}
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
       )}
     </div>
