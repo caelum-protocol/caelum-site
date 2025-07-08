@@ -138,36 +138,8 @@ export const FileUpload = () => {
       });
 
       setTxId(receipt.id);
-      const ipfsUrl = `ipfs://${receipt.id}`;
       setUploadUrl(`https://gateway.irys.xyz/${receipt.id}`);
       setUploadStatus("Upload complete!");
-
-      // === Mint Shard ===
-      const CAELUM_ADDRESS = "0x059bC7dEE4658b75030E40b0B2E17A22Dd455CDF";
-      const SHARD_FORGE_ADDRESS = "0x29316199Fd7aCAb2f9e8d1bD84Babe3501A4fE06";
-
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-
-      const caelumABI = [
-        "function approve(address spender, uint256 amount) public returns (bool)"
-      ];
-      const forgeABI = [
-        "function forgeShard(string memory uri, string memory emotion) public"
-      ];
-
-      const tokenContract = new ethers.Contract(CAELUM_ADDRESS, caelumABI, signer);
-      const shardForge = new ethers.Contract(SHARD_FORGE_ADDRESS, forgeABI, signer);
-
-      toast("Approving CAELUM...");
-      const approveTx = await tokenContract.approve(SHARD_FORGE_ADDRESS, ethers.parseUnits("10", 18));
-      await approveTx.wait();
-
-      toast("Minting Shard...");
-      const mintTx = await shardForge.forgeShard(ipfsUrl, "raw");
-      await mintTx.wait();
-
-      toast.success("🧠 Memory Shard minted!");
 
       const memory: MemoryEntry = {
         fileName: file.name,
@@ -193,7 +165,7 @@ export const FileUpload = () => {
       await refetchBalance?.();
     } catch (e: any) {
       setUploadStatus(`Error: ${e.message}`);
-      toast.error("Upload or minting failed: " + e.message);
+      toast.error("Upload failed: " + e.message);
     }
   };
 
